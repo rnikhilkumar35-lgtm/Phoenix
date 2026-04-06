@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResumeRanker — AI Resume Screening</title>
+  <meta name="description" content="AI-powered resume ranking using NLP semantic embeddings. Built for HR professionals." />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- External Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+  <!-- ── NAVIGATION ── -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#home" class="nav-logo">
+        <i data-lucide="zap"></i>
+        <span>Resume<span class="logo-hi">Ranker</span></span>
+      </a>
+
+      <div class="nav-links" id="nav-links">
+        <a href="#home"    class="nav-link active" data-section="home">Home</a>
+        <a href="#upload"  class="nav-link"        data-section="upload">Upload</a>
+        <a href="#results" class="nav-link"        data-section="results">Dashboard</a>
+        <a href="#about"   class="nav-link"        data-section="about">About</a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <i data-lucide="menu"></i>
+        </button>
+        <a href="#upload" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HOME ── -->
+  <section class="section" id="home">
+    <div class="container">
+      <div class="hero">
+        <span class="hero-eyebrow">Next-Gen Recruitment AI</span>
+        <h1 class="hero-title">
+          The Intelligent Way to <br/>
+          <span class="gradient-text">Screen & Rank</span> Resumes
+        </h1>
+        <p class="hero-desc">
+          Automate your screening process with NLP-powered semantic matching. Find the perfect fit for your job description in seconds.
+        </p>
+        <div class="hero-btns">
+          <a href="#upload" class="btn btn-primary btn-xl" id="home-cta">
+            Begin Analysis
+            <i data-lucide="arrow-right"></i>
+          </a>
+          <a href="#about" class="btn btn-outline btn-xl">How it works</a>
+        </div>
+      </div>
+
+      <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 40px;">
+        <div class="panel">
+          <div class="drop-icon" style="background: #dbeafe; color: #1e40af; margin: 0 0 16px;">
+            <i data-lucide="brain"></i>
+          </div>
+          <h3 class="panel-title">Semantic Matching</h3>
+          <p class="panel-sub">We understand context and intent, not just keywords, using advanced BERT-based models.</p>
+        </div>
+        <div class="panel">
+          <div class="drop-icon" style="background: #d1fae5; color: #065f46; margin: 0 0 16px;">
+            <i data-lucide="zap"></i>
+          </div>
+          <h3 class="panel-title">Real-time Ranking</h3>
+          <p class="panel-sub">Instant results for up to 20 resumes simultaneously with detailed match percentages.</p>
+        </div>
+        <div class="panel">
+          <div class="drop-icon" style="background: #fef3c7; color: #92400e; margin: 0 0 16px;">
+            <i data-lucide="bar-chart-2"></i>
+          </div>
+          <h3 class="panel-title">Smart Analytics</h3>
+          <p class="panel-sub">Visual dashboards help you compare candidates and skill distributions at a glance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── UPLOAD ── -->
+  <section class="section hidden" id="upload">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 60px;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 12px;">New Analysis</h1>
+        <p style="color: var(--text-muted);">Define the role and let our AI handle the screening.</p>
+      </div>
+
+      <div class="upload-grid">
+        <!-- Job Description -->
+        <div class="panel">
+          <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <span class="panel-step">1</span>
+            <h3 class="panel-title" style="margin: 0;">Job Description</h3>
+          </div>
+          <textarea
+            id="job-desc"
+            class="textarea"
+            rows="12"
+            placeholder="Paste your job description here (e.g. Senior Frontend Developer with React, TypeScript, and 5+ years of experience...)"
+          ></textarea>
+          <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.8rem; color: var(--text-dim);">
+            <span id="char-count">0 characters</span>
+            <span id="word-count">0 words</span>
+          </div>
+        </div>
+
+        <!-- File Upload -->
+        <div class="panel">
+          <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <span class="panel-step">2</span>
+            <h3 class="panel-title" style="margin: 0;">Upload Resumes</h3>
+          </div>
+          
+          <div class="drop-zone" id="drop-zone">
+            <input type="file" id="file-input" accept=".pdf,.docx,.doc,.txt" multiple />
+            <div class="drop-icon">
+              <i data-lucide="upload-cloud" style="width: 32px; height: 32px;"></i>
+            </div>
+            <div class="drop-main">Drop files here or <span class="drop-link">browse</span></div>
+            <p class="drop-hint">PDF, DOCX, TXT · Up to 20 files · Max 10MB each</p>
+          </div>
+
+          <div id="file-list" class="file-list"></div>
+          
+          <div id="file-counter" class="hidden" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <span id="file-count-txt" style="font-weight: 600; font-size: 0.9rem;"></span>
+            <button id="clear-files" style="color: var(--danger); font-size: 0.85rem; background: none; font-weight: 500;">Clear All</button>
+          </div>
+          
+          <!-- Progress Bar (hidden until ranking starts) -->
+          <div id="progress-section" class="hidden" style="margin-top: 24px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600;">
+              <span id="progress-status">Analyzing...</span>
+              <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-container">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center;">
+        <button id="rank-btn" class="btn btn-primary btn-xl">
+          <span id="btn-inner">Process & Rank Candidates</span>
+        </button>
+        <p style="margin-top: 16px; font-size: 0.85rem; color: var(--text-dim);">
+          <i data-lucide="info" style="width: 14px; height: 14px; display: inline; vertical-align: middle;"></i>
+          First run might take ~15 seconds to initialize AI models.
+        </p>
+      </div>
+      
+      <div id="upload-status" class="hidden" style="margin-top: 24px; text-align: center; font-weight: 500;"></div>
+    </div>
+  </section>
+
+  <!-- ── RESULTS / DASHBOARD ── -->
+  <section class="section hidden" id="results">
+    <div class="container">
+      <div class="results-header">
+        <div>
+          <h1 style="font-size: 2rem; margin-bottom: 8px;">Analysis Dashboard</h1>
+          <p id="results-meta" style="color: var(--text-muted);"></p>
+        </div>
+        <div style="display: flex; gap: 12px;">
+          <select id="sort-select" class="btn btn-outline btn-sm" style="background: white; border: 1px solid var(--border);">
+            <option value="score-desc">Highest Score</option>
+            <option value="score-asc">Lowest Score</option>
+            <option value="name-asc">Candidate Name (A-Z)</option>
+            <option value="skills-desc">Most Skills Match</option>
+          </select>
+          <button id="new-analysis-btn" class="btn btn-primary btn-sm">
+            <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i>
+            New Analysis
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Stats Strip -->
+      <div class="analytics-strip" id="analytics-strip"></div>
+
+      <!-- Charts View -->
+      <div class="dashboard-grid">
+        <div class="chart-card">
+          <h3 style="margin-bottom: 20px; font-size: 0.95rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Score Distribution</h3>
+          <div style="height: 250px; position: relative;">
+            <canvas id="scoreChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3 style="margin-bottom: 20px; font-size: 0.95rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Skills Presence</h3>
+          <div style="height: 250px; position: relative;">
+            <canvas id="skillsChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Candidate Highlight -->
+      <div id="top-banner" style="margin-bottom: 40px;"></div>
+
+      <!-- Filter Bar -->
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border);">
+        <div style="position: relative; flex: 1;">
+          <i data-lucide="search" style="position: absolute; left: 14px; top: 50%; translate: 0 -50%; width: 18px; color: var(--text-dim);"></i>
+          <input id="filter-input" type="text" placeholder="Search by name or skills..." style="width: 100%; padding: 12px 12px 12px 42px; border: 1px solid var(--border); border-radius: var(--r-md); outline: none;">
+        </div>
+        <div id="filter-toggles" style="display: flex; gap: 8px;">
+          <button class="btn btn-outline btn-sm active" data-filter="all">All</button>
+          <button class="btn btn-outline btn-sm" data-filter="excellent">Excellent</button>
+          <button class="btn btn-outline btn-sm" data-filter="good">Good</button>
+          <button class="btn btn-outline btn-sm" data-filter="fair">Fair</button>
+          <button class="btn btn-outline btn-sm" data-filter="low">Low</button>
+        </div>
+      </div>
+
+      <!-- Results List -->
+      <div id="results-list" class="results-list"></div>
+      
+      <div id="errors-box" class="hidden" style="margin-top: 32px; padding: 20px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: var(--r-md); color: #9a3412;"></div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section class="section hidden" id="about">
+    <div class="container">
+      <div style="max-width: 800px; margin: 0 auto;">
+        <h1 style="text-align: center; margin-bottom: 48px;">About the Engine</h1>
+        <div class="panel" style="margin-bottom: 24px;">
+          <h3 style="margin-bottom: 16px;">Semantic Vectorization</h3>
+          <p style="color: var(--text-muted); margin-bottom: 16px;"> Unlike traditional keyword-based screening, ResumeRanker uses <strong>Sentence Embeddings</strong> (specifically the <code>all-MiniLM-L6-v2</code> model) to understand the semantic context of a resume.</p>
+          <p style="color: var(--text-muted);">This allows the system to recognize that "React Developer" and "Frontend Engineer proficient in Facebook's UI library" are conceptually similar, even if they share zero keywords.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div class="panel">
+            <h3 style="margin-bottom: 12px;">Supported Formats</h3>
+            <ul style="color: var(--text-muted); padding-left: 20px;">
+              <li>PDF (Advanced parsing with PyMuPDF)</li>
+              <li>DOCX (Structured parsing)</li>
+              <li>TXT (Raw text)</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3 style="margin-bottom: 12px;">Core Technologies</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <span class="tag">FastAPI</span>
+              <span class="tag">Python 3.11</span>
+              <span class="tag">HuggingFace</span>
+              <span class="tag">PyTorch</span>
+              <span class="tag">Vanilla JS</span>
+              <span class="tag">Chart.js</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="nav-logo">
+        <i data-lucide="zap" style="width: 18px; height: 18px;"></i>
+        <span>ResumeRanker</span>
+      </div>
+      <div>AI-Powered Talent Intelligence Platform © 2024</div>
+    </div>
+  </footer>
+
+  <!-- ── MODAL ── -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+        <h2 id="modal-title" style="margin: 0; font-size: 1.5rem;"></h2>
+        <button id="modal-close" style="background: none; font-size: 1.5rem; color: var(--text-dim);">&times;</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ── TOASTS ── -->
+  <div id="toasts"></div>
+
+  <script src="/app.js"></script>
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
